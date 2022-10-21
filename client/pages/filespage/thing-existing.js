@@ -576,7 +576,7 @@ class LazyLoadImage extends React.Component {
                 <img
                     ref={this.$el}
                     className={this.props.className}
-                    src={img_placeholder} />
+                    src={this.props.src} />
             );
         }
         return (
