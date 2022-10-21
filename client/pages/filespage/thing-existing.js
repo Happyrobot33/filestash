@@ -512,15 +512,6 @@ class Image extends React.Component {
     }
 
     render() {
-        if (this.props.preview && this.props.view === "grid") {
-            return (
-                <span>
-                    <div className="image_layer"></div>
-                    <LazyLoadImage scroller=".scroll-y" className="thumbnail" src={this.props.preview} />
-                </span>
-            );
-        }
-
         const ext = path.extname(this.props.path).replace(/^\./, "");
         return (
             <span>
@@ -534,56 +525,3 @@ class Image extends React.Component {
         );
     }
 };
-
-class LazyLoadImage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            appear: false,
-            error: false,
-        };
-        this.$scroll = document.querySelector(props.scroller);
-        this.onScroll = debounce(this.onScroll.bind(this), 250);
-        this.$el = createRef();
-    }
-
-    componentDidMount() {
-        if (!this.$scroll) throw new Error("No scroll detected on LazyLoadImage");
-        this.$scroll.addEventListener("scroll", this.onScroll, { passive: true });
-        this.onScroll();
-    }
-    componentWillUnmount() {
-        this.$scroll.removeEventListener("scroll", this.onScroll);
-    }
-
-    onScroll() {
-        if (!this.$el.current) return this.componentWillUnmount();
-        const dim_el = this.$el.current.getBoundingClientRect();
-        if (dim_el.top + dim_el.height > 0 && dim_el.top < window.innerHeight) {
-            this.componentWillUnmount();
-            memory.set(this.props.src, true);
-            this.setState({ appear: true });
-        }
-    }
-
-    onError() {
-        this.setState({ error: true });
-    }
-
-    render() {
-        if ((memory.get(this.props.src) === null) || this.state.error === true) {
-            return (
-                <img
-                    ref={this.$el}
-                    className={this.props.className}
-                    src={this.props.src} />
-            );
-        }
-        return (
-            <img
-                onError={this.onError.bind(this)}
-                className={this.props.className}
-                src={this.props.src} />
-        );
-    }
-}
