@@ -571,7 +571,7 @@ class LazyLoadImage extends React.Component {
     }
 
     render() {
-        if ((this.props.preview || memory.get(this.props.src) === null) || this.state.error === true) {
+        if ((memory.get(this.props.src) === null) || this.state.error === true) {
             return (
                 <img
                     ref={this.$el}
