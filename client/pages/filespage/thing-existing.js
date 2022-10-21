@@ -572,11 +572,16 @@ class LazyLoadImage extends React.Component {
 
     render() {
         if ((this.props.preview || memory.get(this.props.src) === null) || this.state.error === true) {
+            const ext = path.extname(this.props.path).replace(/^\./, "");
             return (
-                <img
-                    ref={this.$el}
-                    className={this.props.className}
-                    src={img_placeholder} />
+                <span>
+                    <Icon name={this.props.icon} />
+                    <NgIf
+                        className="info_extension"
+                        cond={!!ext && this.props.view === "grid" && this.props.icon === "file" && this.props.hide_extension !== true}>
+                        <span>{ext}</span>
+                    </NgIf>
+                </span>
             );
         }
         return (
